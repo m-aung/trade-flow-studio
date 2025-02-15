@@ -53,13 +53,16 @@ TradeFlow Studio is a web-based application designed for financial trading syste
 - Redux (state management)
 - HTML5, CSS3, SASS
 - WebSocket
--
+- Typescript
+- Rxjs
+- redux-observable
 
 ### Backend
 - Node.js with Express.js
 - Python (data processing)
 - AWS Lambda
 - GraphQL
+- Typescript
 
 ### Database
 - PostgreSQL (Amazon RDS)
