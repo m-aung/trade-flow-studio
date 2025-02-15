@@ -7,23 +7,29 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Trading from './pages/Trading';
 import Portfolio from './pages/Portfolio';
+import { ToastProvider } from './components/ui/Toast/ToastContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <WebSocketProvider>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="trading" element={<Trading />} />
-              <Route path="portfolio" element={<Portfolio />} />
-            </Route>
-          </Routes>
-        </WebSocketProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <WebSocketProvider>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<Navigate to="/dashboard" replace />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="trading" element={<Trading />} />
+                  <Route path="portfolio" element={<Portfolio />} />
+                </Route>
+              </Routes>
+            </WebSocketProvider>
+          </ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };

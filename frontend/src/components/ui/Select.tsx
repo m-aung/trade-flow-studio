@@ -1,16 +1,23 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { SelectHTMLAttributes } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
+interface Option {
+  value: string;
+  label: string;
 }
 
-const Input: React.FC<InputProps> = ({
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  label?: string;
+  error?: string;
+  options: Option[];
+}
+
+const Select: React.FC<SelectProps> = ({
   label,
   error,
+  options,
   className = '',
   ...props
-}) => {
+}: SelectProps) => {
   return (
     <div className="space-y-1">
       {label && (
@@ -18,7 +25,7 @@ const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <input
+      <select
         className={`block w-full rounded-md shadow-sm 
           ${error 
             ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
@@ -26,7 +33,13 @@ const Input: React.FC<InputProps> = ({
           } 
           ${className}`}
         {...props}
-      />
+      >
+        {options.map((option: Option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
       {error && (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
@@ -34,4 +47,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input; 
+export default Select; 

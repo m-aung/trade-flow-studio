@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMarketData } from '../hooks/useMarketData';
+import Card from '../components/ui/Card';
 
 const Dashboard: React.FC = () => {
   const btcData = useMarketData('BTC-USD');
@@ -9,8 +10,7 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Market Overview</h2>
+        <Card title="Market Overview">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span>BTC/USD</span>
@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
               <span className="font-mono">{ethData?.price || 'Loading...'}</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -18,6 +19,22 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
+      },
+      backgroundColor: {
+        dark: {
+          page: '#111827',
+          card: '#1F2937',
+          hover: '#374151',
+        },
+      },
+      keyframes: {
+        'slide-in': {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        'slide-in': 'slide-in 0.3s ease-out',
       },
     },
   },
