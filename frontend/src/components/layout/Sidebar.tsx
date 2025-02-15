@@ -9,9 +9,9 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 bg-gray-800 text-white">
-      <div className="p-4">
-        <h2 className="text-2xl font-bold">TradeFlow</h2>
+    <div className="w-64 bg-white dark:bg-gray-800 shadow-sm">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">TradeFlow</h2>
       </div>
       <nav className="mt-6">
         {navItems.map(({ path, label, icon }) => (
@@ -19,8 +19,8 @@ const Sidebar: React.FC = () => {
             key={path}
             to={path}
             className={({ isActive }) =>
-              `flex items-center px-6 py-3 text-gray-100 hover:bg-gray-700 ${
-                isActive ? 'bg-gray-700' : ''
+              `flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                isActive ? 'bg-gray-100 dark:bg-gray-700 text-primary-600 dark:text-primary-400' : ''
               }`
             }
           >
