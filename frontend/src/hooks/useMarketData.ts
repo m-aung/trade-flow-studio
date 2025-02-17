@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useWebSocket } from './useWebSocket';
-import { Socket } from 'socket.io-client';
 
 interface MarketData {
   symbol: string;
@@ -10,29 +9,32 @@ interface MarketData {
 
 export const useMarketData = (symbol: string) => {
   const [marketData, setMarketData] = useState<MarketData | null>(null);
-  const { socket } = useWebSocket();
+  const { socket, isConnected } = useWebSocket();
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !isConnected) return;
 
     // Subscribe to market data updates
-    socket.on('marketUpdate', (data: { symbol: string; data: MarketData }) => {
+    socket.emit('subscribeMarketData', { symbol });
+
+    const handleMarketUpdate = (data: { symbol: string; data: MarketData }) => {
       if (data.symbol === symbol) {
         setMarketData({
           ...data.data,
           timestamp: new Date(data.data.timestamp)
         });
       }
-    });
+    };
 
-    // Request initial market data
-    socket.emit('subscribeMarketData', { symbol });
+    socket.on('marketUpdate', handleMarketUpdate);
 
     return () => {
-      socket.off('marketUpdate');
+      socket.off('marketUpdate', handleMarketUpdate);
       socket.emit('unsubscribeMarketData', { symbol });
     };
-  }, [symbol, socket]);
+  }, [symbol, socket, isConnected]);
 
   return marketData;
-}; 
+};
+
+export default useMarketData; 

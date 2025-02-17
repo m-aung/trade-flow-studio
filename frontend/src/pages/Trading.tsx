@@ -144,7 +144,7 @@ const Trading: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold">Trading</h1>
         <Dropdown
           trigger={
@@ -165,17 +165,26 @@ const Trading: React.FC = () => {
         />
       )}
 
-      <Card title="Place Order" className="max-w-md">
-        <div className="mb-4">
-          <Tooltip content="Your available balance for trading">
-            <Badge variant="info" size="lg">
-              Current Balance: $10,000
-            </Badge>
-          </Tooltip>
-        </div>
-        
-        <Tabs tabs={orderTabs} defaultTab="market" />
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card title="Place Order">
+          <div className="mb-4">
+            <Tooltip content="Your available balance for trading">
+              <Badge variant="info" size="lg">
+                Current Balance: $10,000
+              </Badge>
+            </Tooltip>
+          </div>
+          
+          <Tabs tabs={orderTabs} defaultTab="market" />
+        </Card>
+
+        <Card title="Recent Orders" className="lg:max-h-[600px] overflow-y-auto">
+          <div className="space-y-4">
+            {/* Add recent orders list here */}
+            <p className="text-gray-500 dark:text-gray-400">No recent orders</p>
+          </div>
+        </Card>
+      </div>
 
       <Modal
         isOpen={showConfirmModal}
@@ -184,22 +193,30 @@ const Trading: React.FC = () => {
       >
         <div className="space-y-4">
           <p>Please confirm your trade:</p>
-          <div className="bg-gray-50 p-4 rounded-md">
-            <p>Symbol: {form.symbol}</p>
-            <p>Type: {form.type}</p>
-            <p>Quantity: {form.quantity}</p>
-            <p>Price: ${form.price}</p>
+          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="text-gray-500 dark:text-gray-400">Symbol:</div>
+              <div className="text-gray-900 dark:text-white">{form.symbol}</div>
+              <div className="text-gray-500 dark:text-gray-400">Type:</div>
+              <div className="text-gray-900 dark:text-white">{form.type}</div>
+              <div className="text-gray-500 dark:text-gray-400">Quantity:</div>
+              <div className="text-gray-900 dark:text-white">{form.quantity}</div>
+              <div className="text-gray-500 dark:text-gray-400">Price:</div>
+              <div className="text-gray-900 dark:text-white">${form.price}</div>
+            </div>
           </div>
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 mt-4">
             <Button
               variant="secondary"
               onClick={() => setShowConfirmModal(false)}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleConfirmTrade}
+              className="w-full sm:w-auto"
             >
               Confirm Trade
             </Button>
