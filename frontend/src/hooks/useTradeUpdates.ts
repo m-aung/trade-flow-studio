@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useWebSocket } from './useWebSocket';
 
+export type TradeStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
+
 interface Trade {
   trade_id: string;
   symbol: string;
   type: 'BUY' | 'SELL';
   quantity: number;
   price: number;
-  status: 'PENDING' | 'COMPLETED' | 'CANCELLED';
+  status: TradeStatus;
   executed_at?: Date;
 }
 
@@ -16,15 +18,19 @@ interface TradeUpdate {
   data: Trade;
 }
 
+interface TradeExecution {
+  tradeId: string;
+  status: TradeStatus;
+}
+
 export const useTradeUpdates = () => {
   const [trades, setTrades] = useState<Trade[]>([]);
-  const { sendMessage } = useWebSocket();
+  const { socket, isConnected } = useWebSocket();
 
   useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket) return;
+    if (!socket || !isConnected) return;
 
-    socket.on('tradeUpdate', (update: TradeUpdate) => {
+    const handleTradeUpdate = (update: TradeUpdate) => {
       setTrades(prevTrades => {
         const index = prevTrades.findIndex(t => t.trade_id === update.data.trade_id);
         if (index === -1) {
@@ -34,23 +40,28 @@ export const useTradeUpdates = () => {
         newTrades[index] = update.data;
         return newTrades;
       });
-    });
+    };
 
-    socket.on('tradeExecution', ({ tradeId, status }) => {
+    const handleTradeExecution = ({ tradeId, status }: TradeExecution) => {
       setTrades(prevTrades => 
         prevTrades.map(trade => 
           trade.trade_id === tradeId 
-            ? { ...trade, status } 
+            ? { ...trade, status, executed_at: new Date() } 
             : trade
         )
       );
-    });
+    };
+
+    socket.on('tradeUpdate', handleTradeUpdate);
+    socket.on('tradeExecution', handleTradeExecution);
 
     return () => {
-      socket.off('tradeUpdate');
-      socket.off('tradeExecution');
+      socket.off('tradeUpdate', handleTradeUpdate);
+      socket.off('tradeExecution', handleTradeExecution);
     };
-  }, []);
+  }, [socket, isConnected]);
 
   return trades;
-}; 
+};
+
+export default useTradeUpdates; 
